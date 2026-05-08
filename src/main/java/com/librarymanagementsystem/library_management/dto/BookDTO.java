@@ -1,14 +1,21 @@
 package com.librarymanagementsystem.library_management.dto;
 
-public class BookDTO {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    private Long id;
-    private String title;
+
+public class BookDTO {
+	
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	private Long id;
+    
+	private String title;
     private String author;
     private String isbn;
     private String category;
     private String publisher;
     private int totalCopies;
+    
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int availableCopies;
 
     public BookDTO() {}

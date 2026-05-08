@@ -25,7 +25,8 @@ public class BookService {
 
     public BookDTO getBookById(Long id) {
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Book not found: " + id));
+                .orElseThrow(() ->
+                    new ResourceNotFoundException("Book not found: " + id));
         return toDTO(book);
     }
 
@@ -40,9 +41,12 @@ public class BookService {
     }
 
     public BookDTO addBook(BookDTO dto) {
+        // Check duplicate ISBN
         if (bookRepository.findByIsbn(dto.getIsbn()).isPresent()) {
-            throw new BadRequestException("ISBN already exists: " + dto.getIsbn());
+            throw new BadRequestException(
+                "Book with ISBN " + dto.getIsbn() + " already exists");
         }
+
         Book book = new Book();
         book.setTitle(dto.getTitle());
         book.setAuthor(dto.getAuthor());
@@ -50,13 +54,15 @@ public class BookService {
         book.setCategory(dto.getCategory());
         book.setPublisher(dto.getPublisher());
         book.setTotalCopies(dto.getTotalCopies());
-        book.setAvailableCopies(dto.getTotalCopies());
+        book.setAvailableCopies(dto.getTotalCopies()); // auto set
+
         return toDTO(bookRepository.save(book));
     }
 
     public BookDTO updateBook(Long id, BookDTO dto) {
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Book not found: " + id));
+                .orElseThrow(() ->
+                    new ResourceNotFoundException("Book not found: " + id));
         book.setTitle(dto.getTitle());
         book.setAuthor(dto.getAuthor());
         book.setCategory(dto.getCategory());
